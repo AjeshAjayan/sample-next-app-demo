@@ -18,3 +18,5 @@ per-page layouts
 css module import (/components/create-section-form/create-section-form.module.css)
 react maerial ui (mui)
 axios base url config with singlton design pattern (/lib/axios.ts)
+snackbar abstraction
+generic loading and error handling while routing

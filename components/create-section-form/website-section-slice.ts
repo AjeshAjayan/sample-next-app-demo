@@ -13,7 +13,7 @@ export const sectionSlice = createSlice({
         action.payload.forEach(section => {
           state.push(section);
         });
-      } else {
+      } else if(state.length === 0) {
         state.push({
           title: "",
           subtitle: "",
@@ -32,7 +32,7 @@ export const sectionSlice = createSlice({
     },
     deleteSection: (
       state,
-      action: PayloadAction<{ index: number; onFailure: (msg: string) => void }>
+      action: PayloadAction<{ index: number;}>
     ) => {
       state.splice(action.payload.index, 1);
     },

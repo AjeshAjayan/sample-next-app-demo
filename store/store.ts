@@ -3,7 +3,7 @@ import sectionReducer from '../components/create-section-form/website-section-sl
 
 export const store = configureStore({
   reducer: {
-    websiteSection: sectionReducer
+    websiteSection: sectionReducer,
   },
 })
 

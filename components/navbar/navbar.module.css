@@ -1,0 +1,7 @@
+.linearProgress {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    background-color: #d209b8;
+    bottom: 0;
+}

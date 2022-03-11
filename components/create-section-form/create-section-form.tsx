@@ -8,6 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { addWebSections, deleteWebSection, updateWebSection } from "../../pages/api/web-sections";
 import componentStyles from './create-section-form.module.css';
+import SnackbarSuccess from "../snackbar-success/snackbar-success";
 
 type CreateSectionFormProps = {
     index: number;
@@ -36,11 +37,9 @@ export default function CreateSectionForm({
 
     const [isDeteting, setIsDeleting] = useState<boolean>(false);
 
-    const [deleteSnackbar, setDeleteSnackbar] = useState(false);
-
-    const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
-
     const [openSavedSuccessSnackbar, setOpenSavedSuccessSnackbar] = useState(false);
+
+    const [successMessage, setSuccessMessage] = useState<string>('');
 
     useEffect(() => {
         setCurrentSection({
@@ -71,10 +70,11 @@ export default function CreateSectionForm({
         addWebSections(currentSection).then((response) => {
             dispatch(updateSection({ ...(response.result!), index }))
             setIsSaving(false);
+            setSuccessMessage(response.message!);
             setOpenSavedSuccessSnackbar(true);
         }).catch(err => {
             setIsSaving(false);
-            setOpenErrorSnackbar(true)
+            setSuccessMessage('');
         });
     }
 
@@ -83,70 +83,36 @@ export default function CreateSectionForm({
         updateWebSection(currentSection).then((response) => {
             dispatch(updateSection({ ...(response.result!), index }))
             setIsUpdating(false);
+            setSuccessMessage(response.message!);
             setOpenSavedSuccessSnackbar(true);
         }).catch(err => {
             setIsUpdating(false);
-            setOpenErrorSnackbar(true)
         });
     }
-
+    
     const handleDeleteClick = () => {
         setIsDeleting(true);
         deleteWebSection(_id!).then(data => {
             dispatch(deleteSection({
                 index,
-                onFailure: () => {
-                    setIsDeleting(false);
-                    setDeleteSnackbar(true);
-                }
             }));
-            setIsDeleting(false);
         }).catch(err => {
             setIsDeleting(false);
         })
     }
 
     const handleSnackbarClose = () => {
-        setDeleteSnackbar(false);
-        setOpenErrorSnackbar(false);
         setOpenSavedSuccessSnackbar(false);
     }
 
     return (
         <>
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={deleteSnackbar}
-                autoHideDuration={3000}
-                onClose={handleSnackbarClose}>
-                <Slide in={deleteSnackbar} direction="up" mountOnEnter unmountOnExit>
-                    <Alert severity="warning" sx={{ width: '100%' }} onClose={handleSnackbarClose}>
-                        Can't delete last section
-                    </Alert>
-                </Slide>
-            </Snackbar>
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                open={openErrorSnackbar}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}>
-                <Slide in={openErrorSnackbar} direction="up" mountOnEnter unmountOnExit>
-                    <Alert severity="error" sx={{ width: '100%' }} onClose={handleSnackbarClose}>
-                        Something went wrong
-                    </Alert>
-                </Slide>
-            </Snackbar>
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            <SnackbarSuccess
+                message={successMessage}
                 open={openSavedSuccessSnackbar}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}>
-                <Slide in={openSavedSuccessSnackbar} direction="up" mountOnEnter unmountOnExit>
-                    <Alert severity="success" sx={{ width: '100%' }} onClose={handleSnackbarClose}>
-                        Section saved successfully
-                    </Alert>
-                </Slide>
-            </Snackbar>
+                duration={3000}
+                onClose={handleSnackbarClose} />
+
             <Card className={componentStyles.main} variant="outlined" sx={{ overflow: 'auto' }}>
                 <CardContent>
                     <Typography variant="h6">
@@ -214,7 +180,7 @@ export default function CreateSectionForm({
                             : <LoadingButton
                                 color="warning"
                                 onClick={handleUpdateClick}
-                                loading={isSaving}
+                                loading={isUpdating}
                                 loadingPosition="start"
                                 startIcon={<SaveIcon />}
                                 variant="contained"
