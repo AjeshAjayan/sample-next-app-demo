@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Profie } from "../../models/profile";
+import { Profie } from "../../src/models/profile";
 import axois from "axios";
-import { ServerResponse } from "../../models/server-response";
-import handleHttpMethods from "../../lib/utils/handle-http-methods";
+import { ServerResponse } from "../../src/models/server-response";
+import handleHttpMethods from "../../src/lib/utils/handle-http-methods";
 
 export default function handler(
   req: NextApiRequest,

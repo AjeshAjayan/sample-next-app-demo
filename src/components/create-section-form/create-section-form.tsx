@@ -6,7 +6,7 @@ import { deleteSection, updateSection } from "./website-section-slice";
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { addWebSections, deleteWebSection, updateWebSection } from "../../pages/api/web-sections";
+import { addWebSections, deleteWebSection, updateWebSection } from "../../../pages/api/web-sections";
 import componentStyles from './create-section-form.module.css';
 import SnackbarSuccess from "../snackbar-success/snackbar-success";
 

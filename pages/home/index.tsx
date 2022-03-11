@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CreateSectionForm from "../../components/create-section-form/create-section-form";
-import NavbarLayout from "../../lib/navbar-layout-warper";
-import { SectionState } from "../../models/section.interface";
-import { selectSections, addSection, setIntialSections } from "../../components/create-section-form/website-section-slice";
+import CreateSectionForm from "../../src/components/create-section-form/create-section-form";
+import NavbarLayout from "../../src/lib/navbar-layout-warper";
+import { SectionState } from "../../src/models/section.interface";
+import { selectSections, addSection, setIntialSections } from "../../src/components/create-section-form/website-section-slice";
 import { getWebSections } from "../api/web-sections";
 
 type HomeProps = {

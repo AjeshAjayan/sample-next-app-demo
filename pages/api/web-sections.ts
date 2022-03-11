@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import handleHttpMethods from "../../lib/utils/handle-http-methods";
-import dbConnect from "../../lib/db-context";
-import PageSection from "../../schemas/page-sections";
-import generateResponse from "../../lib/utils/generate-response";
+import handleHttpMethods from "../../src/lib/utils/handle-http-methods";
+import dbConnect from "../../src/lib/db-context";
+import PageSection from "../../src/schemas/page-sections";
+import generateResponse from "../../src/lib/utils/generate-response";
 import axios from "axios";
-import { ServerResponse } from "../../models/server-response";
-import { SectionState } from "../../models/section.interface";
-import Axios from "../../lib/axios";
+import { ServerResponse } from "../../src/models/server-response";
+import { SectionState } from "../../src/models/section.interface";
+import Axios from "../../src/lib/axios";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const pageSection = await PageSection.find({});
@@ -20,6 +20,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         pageSection
       )
     );
+  res.end();
 }
 
 async function put(req: NextApiRequest, res: NextApiResponse) {
@@ -36,6 +37,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       .json(
         generateResponse(undefined, 200, "Updated successfully", pageSection)
       );
+    res.end();
   } catch (err) {
     error(req, res);
   }
@@ -61,9 +63,11 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
           pageSection
         )
       );
+    res.end();
   } catch (err: any) {
     if (err.name === "ValidationError") {
       res.status(400).send(generateResponse([], 400, "Validation error", err));
+      res.end();
     } else {
       error(req, res);
     }
@@ -76,6 +80,7 @@ async function del(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(200)
       .json(generateResponse(undefined, 200, "Deleted successfully", null));
+    res.end();
   } catch (err) {
     error(req, res);
   }
@@ -83,6 +88,7 @@ async function del(req: NextApiRequest, res: NextApiResponse) {
 
 function error(req: NextApiRequest, res: NextApiResponse) {
   res.status(500).send(generateResponse([], 500, "Error", {}));
+  res.end();
 }
 
 export default async function handler(
