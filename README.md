@@ -16,7 +16,9 @@ npm run dev
 ## basic env example
 ## getServerSideProps
 ## redux toolkit
+
 ## mongodb with mongoose
+## basic CRUD
 ## per-page layouts
 ## css module import (/components/create-section-form/create-section-form.module.css)
 ## react maerial ui (mui)
