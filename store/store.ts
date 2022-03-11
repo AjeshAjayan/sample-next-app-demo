@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import sectionReducer from './website-section-slice';
+import sectionReducer from '../components/create-section-form/website-section-slice';
 
 export const store = configureStore({
   reducer: {

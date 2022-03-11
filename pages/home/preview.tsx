@@ -1,4 +1,4 @@
-import NavbarLayout from "../../lib/navbar-layout.decorator"
+import NavbarLayout from "../../lib/navbar-layout-warper"
 
 export default function Preview() {
     return <h1>Preview</h1>

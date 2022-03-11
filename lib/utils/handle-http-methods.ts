@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { HttpMethod } from "../models/http-methods";
+import { HttpMethod } from "../../models/http-methods";
 
 type HttpMethodsInput = {
   post?: (req: NextApiRequest, res: NextApiResponse) => void;

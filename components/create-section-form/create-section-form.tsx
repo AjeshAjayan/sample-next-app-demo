@@ -1,18 +1,20 @@
 import { Alert, Button, Card, CardActions, CardContent, Grid, Slide, Snackbar, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
-import { SectionState } from "../models/section.interface";
-import { deleteSection, updateSection } from "../store/website-section-slice";
+import { SectionState } from "../../models/section.interface";
+import { deleteSection, updateSection } from "./website-section-slice";
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { addWebSections } from "../pages/api/web-sections";
+import { addWebSections, deleteWebSection, updateWebSection } from "../../pages/api/web-sections";
+import componentStyles from './create-section-form.module.css';
 
 type CreateSectionFormProps = {
     index: number;
 } & SectionState;
 
 export default function CreateSectionForm({
+    _id,
     index,
     title,
     subtitle,
@@ -22,12 +24,15 @@ export default function CreateSectionForm({
     const dispatch = useDispatch();
 
     const [currentSection, setCurrentSection] = useState<SectionState>({
+        _id,
         title,
         subtitle,
         content
     });
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
+
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     const [isDeteting, setIsDeleting] = useState<boolean>(false);
 
@@ -36,6 +41,15 @@ export default function CreateSectionForm({
     const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
     const [openSavedSuccessSnackbar, setOpenSavedSuccessSnackbar] = useState(false);
+
+    useEffect(() => {
+        setCurrentSection({
+            _id,
+            title,
+            subtitle,
+            content
+        });
+    }, [_id, title, subtitle, content])
 
     const handleContentKeyUp = (value: string) => setCurrentSection({
         ...currentSection,
@@ -63,16 +77,33 @@ export default function CreateSectionForm({
             setOpenErrorSnackbar(true)
         });
     }
-    
+
+    const handleUpdateClick = () => {
+        setIsUpdating(true);
+        updateWebSection(currentSection).then((response) => {
+            dispatch(updateSection({ ...(response.result!), index }))
+            setIsUpdating(false);
+            setOpenSavedSuccessSnackbar(true);
+        }).catch(err => {
+            setIsUpdating(false);
+            setOpenErrorSnackbar(true)
+        });
+    }
+
     const handleDeleteClick = () => {
         setIsDeleting(true);
-        dispatch(deleteSection({
-            index,
-            onFailure: () => {
-                setIsDeleting(false);
-                setDeleteSnackbar(true);
-            }
-        }));
+        deleteWebSection(_id!).then(data => {
+            dispatch(deleteSection({
+                index,
+                onFailure: () => {
+                    setIsDeleting(false);
+                    setDeleteSnackbar(true);
+                }
+            }));
+            setIsDeleting(false);
+        }).catch(err => {
+            setIsDeleting(false);
+        })
     }
 
     const handleSnackbarClose = () => {
@@ -116,7 +147,7 @@ export default function CreateSectionForm({
                     </Alert>
                 </Slide>
             </Snackbar>
-            <Card variant="outlined" sx={{ overflow: 'auto' }}>
+            <Card className={componentStyles.main} variant="outlined" sx={{ overflow: 'auto' }}>
                 <CardContent>
                     <Typography variant="h6">
                         {currentSection.title ? currentSection.title : `Section ${index + 1}`}
@@ -168,16 +199,29 @@ export default function CreateSectionForm({
                     >
                         Delete
                     </LoadingButton>
-                    <LoadingButton
-                        color="primary"
-                        onClick={handleSaveClick}
-                        loading={isSaving}
-                        loadingPosition="start"
-                        startIcon={<SaveIcon />}
-                        variant="contained"
-                    >
-                        Save
-                    </LoadingButton>
+                    {
+                        !currentSection._id
+                            ? <LoadingButton
+                                color="primary"
+                                onClick={handleSaveClick}
+                                loading={isSaving}
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="contained"
+                            >
+                                Save
+                            </LoadingButton>
+                            : <LoadingButton
+                                color="warning"
+                                onClick={handleUpdateClick}
+                                loading={isSaving}
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="contained"
+                            >
+                                Update
+                            </LoadingButton>
+                    }
                 </CardActions>
             </Card>
         </>

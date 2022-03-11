@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SectionState } from "../models/section.interface";
-import { RootState } from "./store";
+import { SectionState } from "../../models/section.interface";
+import { RootState } from "../../store/store";
 
 const initialState: SectionState[] = [];
 
@@ -34,11 +34,7 @@ export const sectionSlice = createSlice({
       state,
       action: PayloadAction<{ index: number; onFailure: (msg: string) => void }>
     ) => {
-      if (state.length > 1) {
-        state.splice(action.payload.index, 1);
-      } else {
-        action.payload.onFailure("Can't delete last section");
-      }
+      state.splice(action.payload.index, 1);
     },
   },
 });

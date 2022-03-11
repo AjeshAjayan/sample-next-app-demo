@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CreateSectionForm from "../../components/create-section-form";
-import NavbarLayout from "../../lib/navbar-layout.decorator";
+import CreateSectionForm from "../../components/create-section-form/create-section-form";
+import NavbarLayout from "../../lib/navbar-layout-warper";
 import { SectionState } from "../../models/section.interface";
-import { selectSections, addSection, setIntialSections } from "../../store/website-section-slice";
+import { selectSections, addSection, setIntialSections } from "../../components/create-section-form/website-section-slice";
 import { getWebSections } from "../api/web-sections";
 
 type HomeProps = {
@@ -72,9 +72,7 @@ export default function Home({ webSections, message }: HomeProps) {
                             <div key={index}>
                                 <CreateSectionForm
                                     index={index}
-                                    title={section.title}
-                                    subtitle={section.subtitle}
-                                    content={section.content}
+                                    {...section}
                                 />
                             </div>
                         )
@@ -103,7 +101,7 @@ export async function getServerSideProps(): Promise<{ props: HomeProps }> {
         }
     } catch (err: any) {
         console.log('error while fetching web sections', err.message);
-        
+
         return {
             props: {
                 webSections: [],
