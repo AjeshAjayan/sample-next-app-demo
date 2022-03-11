@@ -89,6 +89,14 @@ export default function Home({ webSections, message }: HomeProps) {
     );
 }
 
+/**
+ * in this scenario server-side rendering is not necessary
+ * in fact, it is foolish to use server-side rendering in this scenario
+ * so consider this only as an example for getServerSideProps
+ * 
+ * for these kinds of scenarios client-side rendering is the best 
+ * to use so that we will not end up wasting server resources
+ */
 export async function getServerSideProps(): Promise<{ props: HomeProps }> {
     try {
         const webSectionsResponse = await getWebSections();
