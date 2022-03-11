@@ -18,7 +18,7 @@ npm run dev
 ## redux toolkit
 
 ## mongodb with mongoose
-## basic CRUD
+## basic CRUD operations
 ## per-page layouts
 ## css module import (/components/create-section-form/create-section-form.module.css)
 ## react maerial ui (mui)
