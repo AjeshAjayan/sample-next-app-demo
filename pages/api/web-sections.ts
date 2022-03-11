@@ -74,11 +74,25 @@ export default async function handler(
 }
 
 export function getWebSections(): Promise<ServerResponse<SectionState[]>> {
-  return axios.get("/api/web-sections");
+  return new Promise((resolve, reject) =>{
+    axios.get(process.env.NEXT_PUBLIC_BASE_URL + "web-sections")
+      .then((response) => {
+        resolve(response.data)
+      }).catch((err) => {
+        reject(err);
+      })
+  });
 }
 
 export function addWebSections(
   section: SectionState
 ): Promise<ServerResponse<SectionState>> {
-  return axios.post("http://localhost:3000/api/web-sections", section);
+  return new Promise((resolve, reject) =>{
+    axios.post(process.env.NEXT_PUBLIC_BASE_URL + "web-sections", section)
+      .then((response) => {
+        resolve(response.data)
+      }).catch((err) => {
+        reject(err);
+      })
+  });
 }

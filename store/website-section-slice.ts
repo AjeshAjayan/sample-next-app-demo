@@ -2,18 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SectionState } from "../models/section.interface";
 import { RootState } from "./store";
 
-const initialState: SectionState[] = [
-  {
-    title: "",
-    subtitle: "",
-    content: "",
-  },
-];
+const initialState: SectionState[] = [];
 
 export const sectionSlice = createSlice({
   name: "websiteSections",
   initialState,
   reducers: {
+    setIntialSections: (state, action: PayloadAction<SectionState[]>) => {
+      if(action.payload.length > 0) {
+        action.payload.forEach(section => {
+          state.push(section);
+        });
+      } else {
+        state.push({
+          title: "",
+          subtitle: "",
+          content: "",
+        });
+      }
+    },
     addSection: (state, action: PayloadAction<SectionState>) => {
       state.push(action.payload);
     },
@@ -36,7 +43,7 @@ export const sectionSlice = createSlice({
   },
 });
 
-export const { addSection, updateSection, deleteSection } =
+export const { addSection, updateSection, deleteSection, setIntialSections } =
   sectionSlice.actions;
 
 export const selectSections = (state: RootState) => state.websiteSection;

@@ -1,16 +1,28 @@
 import { Button, Grid, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Head from "next/head";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CreateSectionForm from "../../components/create-section-form";
 import NavbarLayout from "../../lib/navbar-layout.decorator";
-import { selectSections, addSection } from "../../store/website-section-slice";
+import { SectionState } from "../../models/section.interface";
+import { selectSections, addSection, setIntialSections } from "../../store/website-section-slice";
+import { getWebSections } from "../api/web-sections";
 
-export default function Home() {
+type HomeProps = {
+    webSections: SectionState[],
+    message: string | null
+}
+
+export default function Home({ webSections, message }: HomeProps) {
 
     const dispatch = useDispatch();
 
     const sections = useSelector(selectSections);
+
+    useEffect(() => {
+        dispatch(setIntialSections(webSections))
+    }, [])
 
     const handleAddSectionClick = () => {
         dispatch(
@@ -20,6 +32,10 @@ export default function Home() {
                 content: ''
             })
         );
+    }
+
+    if (message) {
+        return <Typography sx={{ margin: '10px auto' }} variant="h3">{message}</Typography>
     }
 
     return (
@@ -73,6 +89,28 @@ export default function Home() {
             </Box>
         </>
     );
+}
+
+export async function getServerSideProps(): Promise<{ props: HomeProps }> {
+    try {
+        const webSectionsResponse = await getWebSections();
+
+        return {
+            props: {
+                webSections: webSectionsResponse.result ?? [],
+                message: null
+            }
+        }
+    } catch (err: any) {
+        console.log('error while fetching web sections', err.message);
+        
+        return {
+            props: {
+                webSections: [],
+                message: "Failed to fetch data"
+            }
+        }
+    }
 }
 
 NavbarLayout(Home);
