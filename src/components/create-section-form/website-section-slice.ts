@@ -10,6 +10,7 @@ export const sectionSlice = createSlice({
   reducers: {
     setIntialSections: (state, action: PayloadAction<SectionState[]>) => {
       if(action.payload.length > 0) {
+        state.length = 0;
         action.payload.forEach(section => {
           state.push(section);
         });

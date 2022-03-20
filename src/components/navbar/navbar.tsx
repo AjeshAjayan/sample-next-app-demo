@@ -14,10 +14,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import SnackbarError from "../snackbar-error/snackbar-error";
 import navbarStyles from './navbar.module.css';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-type NavbarProp = { children: JSX.Element }
+type NavbarProp = { children: JSX.Element, showBackButton: boolean }
 
-export default function Navbar({ children }: NavbarProp) {
+export default function Navbar({ children, showBackButton }: NavbarProp) {
 
     const router = useRouter();
     const [isRouting, setIsRouting] = useState(false);
@@ -47,6 +48,10 @@ export default function Navbar({ children }: NavbarProp) {
         setIsRouting(false);
     }
 
+    const handleBackButtonOnClick = () => {
+        router.back();
+    }
+
     return <>
         <SnackbarError
             message="Something went wrong"
@@ -57,16 +62,30 @@ export default function Navbar({ children }: NavbarProp) {
             <Box sx={{ flexGrow: 1, position: 'relative' }}>
                 <AppBar position="static">
                     <Toolbar variant="regular" sx={{ justifyContent: 'space-between' }}>
-                        <Link href="/home">
-                            <Typography
-                                variant="h6"
-                                noWrap
-                                component="div"
-                                sx={{ display: { xs: 'none', sm: 'block', cursor: 'pointer' } }}
-                            >
-                                Rawbiti
-                            </Typography>
-                        </Link>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: '5px',
+                            alignItems: 'center'
+                        }}>
+                            {
+                                showBackButton && <IconButton
+                                    onClick={handleBackButtonOnClick}
+                                    sx={{ color: 'white' }}>
+                                    <ArrowBackIcon />
+                                </IconButton>
+                            }
+                            <Link href="/home">
+                                <Typography
+                                    variant="h6"
+                                    noWrap
+                                    component="div"
+                                    sx={{ display: { xs: 'none', sm: 'block', cursor: 'pointer' } }}
+                                >
+                                    Rawbiti
+                                </Typography>
+                            </Link>
+                        </Box>
 
                         <Box>
                             <Button

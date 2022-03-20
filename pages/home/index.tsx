@@ -119,4 +119,4 @@ export async function getServerSideProps(): Promise<{ props: HomeProps }> {
     }
 }
 
-NavbarLayout(Home);
+NavbarLayout(Home, false);
